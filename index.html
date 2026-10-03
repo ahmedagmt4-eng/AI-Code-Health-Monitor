@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Code Health Monitor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">AI</span><div><strong>Code Health Monitor</strong><small>Intelligent static analysis</small></div></div>
+    <span class="badge">Python Prototype</span>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">AI-BASED CODE HEALTH MONITORING SYSTEM</p>
+        <h1>Check the health of your Python code.</h1>
+        <p class="hero-copy">Submit Python source code and receive static quality indicators, an AI classification, detected issues, and practical recommendations.</p>
+      </div>
+    </section>
+
+    {% if error %}<div class="alert error">{{ error }}</div>{% endif %}
+
+    <section class="panel">
+      <div class="panel-head"><div><h2>Code Analyzer</h2><p>Paste Python code below, then run the analysis.</p></div><button type="button" class="ghost" id="loadExample">Load example</button></div>
+      <form method="post" action="{{ url_for('analyze') }}">
+        <textarea id="code" name="code" spellcheck="false" required placeholder="Paste Python code here...">{{ example_code }}</textarea>
+        <div class="form-foot"><span>Supports Python source code • Max 512 KB</span><button class="primary" type="submit">Analyze Code →</button></div>
+      </form>
+    </section>
+
+    <section class="features">
+      <div class="feature"><span>01</span><h3>Static Analysis</h3><p>Measures complexity, duplication, nesting, functions, classes, and other indicators.</p></div>
+      <div class="feature"><span>02</span><h3>AI Classification</h3><p>Random Forest classifies the analyzed sample as healthy or potentially problematic.</p></div>
+      <div class="feature"><span>03</span><h3>Actionable Report</h3><p>Highlights detected issues and provides focused recommendations for improvement.</p></div>
+    </section>
+  </main>
+  <footer>Graduation Project • AI-Based Code Health Monitoring System</footer>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

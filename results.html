@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analysis Results • AI Code Health Monitor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="topbar"><div class="brand"><span class="brand-mark">AI</span><div><strong>Code Health Monitor</strong><small>Analysis report</small></div></div><a class="ghost link-btn" href="{{ url_for('index') }}">← New Analysis</a></header>
+  <main class="container results-page">
+    {% if not result.valid %}
+      <div class="alert error"><strong>Analysis could not be completed.</strong><br>{{ result.error }}</div>
+      <a class="primary inline-btn" href="{{ url_for('index') }}">Back to Analyzer</a>
+    {% else %}
+      <section class="result-hero">
+        <div><p class="eyebrow">CODE HEALTH REPORT</p><h1>Analysis completed</h1><p>Static analysis and AI classification for the submitted Python code.</p></div>
+        <div class="score-card"><div class="score">{{ result.metrics.health_score }}</div><div><strong>/ 100</strong><small>Health score</small></div></div>
+      </section>
+
+      <section class="grid metrics-grid">
+        {% for label, key in [('Lines of Code','lines_of_code'),('Functions','functions'),('Classes','classes'),('Complexity','cyclomatic_complexity'),('Duplication','code_duplication'),('Unused Variables','unused_variables'),('Max Nesting','max_nesting'),('Avg. Function Length','avg_function_length')] %}
+        <div class="metric"><span>{{ label }}</span><strong>{{ result.metrics[key] }}</strong></div>
+        {% endfor %}
+      </section>
+
+      <section class="grid two-col">
+        <div class="panel ai-panel">
+          <div class="panel-head"><div><p class="eyebrow">MACHINE LEARNING</p><h2>AI Classification</h2></div></div>
+          {% if result.ai.label == 'Healthy' %}<div class="status good">✓ Healthy</div>{% elif result.ai.label == 'Potentially Problematic' %}<div class="status warn">! Potentially Problematic</div>{% else %}<div class="status neutral">AI unavailable</div>{% endif %}
+          {% if result.ai.confidence %}<p class="confidence">Model confidence: <strong>{{ result.ai.confidence }}%</strong></p>{% endif %}
+          {% if result.ai.error %}<p class="muted">{{ result.ai.error }}</p>{% endif %}
+          <p class="muted">The AI output is decision-support information and should be reviewed alongside static-analysis findings.</p>
+        </div>
+        <div class="panel"><p class="eyebrow">DETECTED ISSUES</p><h2>What needs attention?</h2>
+          <div class="issues">{% for issue in result.issues %}<div class="issue"><span class="severity {{ issue.severity|lower }}">{{ issue.severity }}</span><div><strong>{{ issue.title }}</strong><p>{{ issue.detail }}</p></div></div>{% endfor %}</div>
+        </div>
+      </section>
+
+      <section class="panel"><div class="panel-head"><div><p class="eyebrow">RECOMMENDATIONS</p><h2>Suggested improvements</h2></div></div><ul class="recommendations">{% for item in result.recommendations %}<li>✓ {{ item }}</li>{% endfor %}</ul></section>
+
+      <section class="panel code-panel"><div class="panel-head"><div><p class="eyebrow">SUBMITTED SOURCE</p><h2>Python code</h2></div></div><pre><code>{{ source }}</code></pre></section>
+    {% endif %}
+  </main>
+  <footer>Graduation Project • AI-Based Code Health Monitoring System</footer>
+</body>
+</html>
